@@ -16,7 +16,6 @@ const App = () => {
 		dispatch(fetchPokeStart());
 	}, []);
 
-	console.log();
 	if (error) {
 		<div>An error occurred, please try again later</div>;
 	}
@@ -26,11 +25,9 @@ const App = () => {
 
 	return (
 		<div className="flex justify-center">
-			<div className="container grid grid-cols-4">
+			<div className="container grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2">
 				{pokemons?.map((poke: Pokemon) => (
-					<div key={poke.name}>
-						<PokeCard pokemon={poke} />
-					</div>
+					<PokeCard key={poke.name} pokemon={poke} />
 				))}
 			</div>
 		</div>

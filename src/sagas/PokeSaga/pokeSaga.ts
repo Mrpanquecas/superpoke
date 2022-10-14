@@ -33,10 +33,8 @@ function* fetchPokemonsSaga() {
 			next?: string;
 			previous?: string;
 		} = yield call(getPokemons);
-		console.log('resp =====>', response);
 		yield put(fetchPokeSuccess(response));
 	} catch (err) {
-		console.log(err);
 		yield put(fetchPokeFail());
 	}
 }
