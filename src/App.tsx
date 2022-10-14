@@ -1,36 +1,38 @@
 import React, { useEffect } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { PokeState } from './types/types';
+import { useDispatch, useSelector } from 'react-redux';
+import { Pokemon } from 'pokenode-ts';
 import { fetchPokeStart } from './actions/pokeActions/pokeActions';
+import { RootState } from './reducers/rootReducer';
+import PokeCard from './components/PokeCard';
 
 const App = () => {
 	const dispatch = useDispatch();
-	const { loading, pokemons, error } = useSelector((state: PokeState) => state);
+	const { loading, error, pokemons } = useSelector(
+		(state: RootState) => state.pokemons
+	);
 
 	useEffect(() => {
 		dispatch(fetchPokeStart());
 	}, []);
 
-	console.log(loading, pokemons, error);
+	console.log();
+	if (error) {
+		<div>An error occurred, please try again later</div>;
+	}
+	if (loading) {
+		<div>Loading pokemons...</div>;
+	}
+
 	return (
-		<div className="App">
-			<header className="App-header">
-				<img src={logo} className="App-logo" alt="logo" />
-				<p>
-					Edit <code>src/App.tsx</code> and save to reload.
-				</p>
-				<a
-					className="App-link"
-					href="https://reactjs.org"
-					target="_blank"
-					rel="noopener noreferrer"
-				>
-					Learn React
-				</a>
-			</header>
+		<div className="flex justify-center">
+			<div className="container grid grid-cols-4">
+				{pokemons?.map((poke: Pokemon) => (
+					<div key={poke.name}>
+						<PokeCard pokemon={poke} />
+					</div>
+				))}
+			</div>
 		</div>
 	);
 };

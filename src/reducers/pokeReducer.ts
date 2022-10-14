@@ -22,10 +22,14 @@ export const pokeReducer = (state = initialstate, action: PokeActions) => {
 				error: true,
 			};
 		case pokeTypes.FETCH_POKE_SUCCESS:
+			console.log('payload =====>', action.payload);
 			return {
 				...state,
 				loading: false,
-				pokemons: action.payload,
+				pokemons: action.payload.pokemons,
+				count: action.payload.count,
+				next: action.payload.next,
+				previous: action.payload.previous,
 			};
 
 		default:
