@@ -5,11 +5,12 @@ import {
 	fetchPokeSuccess,
 } from '../../actions/pokeActions/pokeActions';
 import pokeTypes from '../../ActionTypes/pokeTypes';
+import { FetchPokeStart } from '../../types/types';
 
-const getPokemons = async () => {
+const getPokemons = async (offset: number) => {
 	let pokemons: Pokemon[] = [];
 	const api = new MainClient();
-	const response = await api.pokemon.listPokemons(0, 20);
+	const response = await api.pokemon.listPokemons(offset || 0, 20);
 	return Promise.all(
 		response.results.map(async (pokemon) => {
 			const result: Pokemon = await api.pokemon.getPokemonByName(pokemon.name);
@@ -25,14 +26,14 @@ const getPokemons = async () => {
 	});
 };
 
-function* fetchPokemonsSaga() {
+function* fetchPokemonsSaga(action: FetchPokeStart) {
 	try {
 		const response: {
 			pokemons: Pokemon[];
 			count: number;
-			next?: string;
-			previous?: string;
-		} = yield call(getPokemons);
+			next: string | undefined;
+			previous: string | undefined;
+		} = yield call(getPokemons, action.offset);
 		yield put(fetchPokeSuccess(response));
 	} catch (err) {
 		yield put(fetchPokeFail());

@@ -6,8 +6,9 @@ import {
 	FetchPokeSuccess,
 } from '../../types/types';
 
-export const fetchPokeStart = (): FetchPokeStart => ({
+export const fetchPokeStart = (offset: number): FetchPokeStart => ({
 	type: pokeTypes.FETCH_POKE_START,
+	offset,
 });
 
 export const fetchPokeFail = (): FetchPokeFail => ({

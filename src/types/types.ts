@@ -17,10 +17,13 @@ export interface PokeState {
 	loading: boolean;
 	error: boolean;
 	pokemons: Pokemon[];
+	previous: string | undefined;
+	next: string | undefined;
 }
 
 export interface FetchPokeStart {
 	type: typeof pokeTypes.FETCH_POKE_START;
+	offset: number;
 }
 
 export interface FetchPokeFail {

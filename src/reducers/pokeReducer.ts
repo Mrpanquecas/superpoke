@@ -5,6 +5,8 @@ const initialstate: PokeState = {
 	loading: false,
 	pokemons: [],
 	error: false,
+	previous: undefined,
+	next: undefined,
 };
 
 export const pokeReducer = (state = initialstate, action: PokeActions) => {
