@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { Pokemon } from 'pokenode-ts';
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import { Pokemon } from "pokenode-ts";
 
 export interface PokeState {
 	loading: boolean;
@@ -24,7 +24,7 @@ const initialState: PokeState = {
 };
 
 export const pokemonSlice = createSlice({
-	name: 'pokemons',
+	name: "pokemons",
 	initialState,
 	reducers: {
 		setPokemonListFail: (state) => {
@@ -40,12 +40,12 @@ export const pokemonSlice = createSlice({
 			if (!action.payload.next) {
 				state.pokemons = [...state.pokemons, ...state.customPokemons];
 			}
+			state.count = action.payload.count + state.customPokemons.length;
 			state.previous = action.payload.previous;
 			state.next = action.payload.next;
 			//state.count = action.payload.count;
 			// if it's no the first request we have to take in
 			// consideration the fact we might have custom pokemons added
-			state.count = action.payload.count + state.customPokemons.length;
 			state.loading = false;
 		},
 		setPokemonDetailsStart: (state) => {

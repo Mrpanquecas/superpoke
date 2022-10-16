@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
-import './App.css';
-import { Pokemon } from 'pokenode-ts';
-import PokeCard from './components/PokeCard';
-import { fetchPokemonList } from './actions/pokeActions/pokeActions';
-import { useAppDispatch, useAppSelector } from './hooks/redux-hooks';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from "react";
+import { Pokemon } from "pokenode-ts";
+import PokeCard from "../components/PokeCard";
+import { fetchPokemonList } from "../actions/pokeActions/pokeActions";
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
+import { useNavigate } from "react-router-dom";
+import { PokeBallLoading } from "../components/PokeBallLoading";
 
-const App = () => {
+const Home: React.FC<{}> = (props) => {
+	console.log(props);
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const { pokemons, loading, error, next, previous, count } = useAppSelector(
@@ -23,8 +24,8 @@ const App = () => {
 		// unfortunately when I started I was not aware I was not going to be able to simply
 		// pass the next/previous string to the api wrapper I am using here
 		// so I extract only the offset. Ideally it would not be needed
-		const queryParams = new URLSearchParams(url.split('?')[1]);
-		dispatch(fetchPokemonList(Number(queryParams.get('offset'))));
+		const queryParams = new URLSearchParams(url.split("?")[1]);
+		dispatch(fetchPokemonList(Number(queryParams.get("offset"))));
 	};
 
 	const handleFirstLast = (count: number) => {
@@ -35,7 +36,7 @@ const App = () => {
 		return <div>An error occurred, please try again later</div>;
 	}
 	if (loading) {
-		return <div>Loading pokemons...</div>;
+		return <PokeBallLoading />;
 	}
 
 	// Pagination could go more in depth by using number to skip to each page direcly
@@ -45,7 +46,7 @@ const App = () => {
 			<button
 				// Using navigate method to redirect the user
 				// same functionality could be achieved with the Link component
-				onClick={() => navigate('addPokemon')}
+				onClick={() => navigate("addPokemon")}
 				className="bg-green-300 rounded-sm p-2"
 			>
 				ADD A NEW POKEMON
@@ -69,7 +70,7 @@ const App = () => {
 					// class concatenation is easier to read using a tool like
 					// classnames. For sake of simplicity I'm using string interpolation
 					className={`p-2 rounded-sm ${
-						!previous ? 'bg-gray-300' : 'bg-blue-300'
+						!previous ? "bg-gray-300" : "bg-blue-300"
 					}`}
 					disabled={!previous}
 					onClick={() => handlePage(previous)}
@@ -78,7 +79,7 @@ const App = () => {
 				</button>
 				<button
 					aria-label="next"
-					className={`p-2 rounded-sm ${!next ? 'bg-gray-300' : 'bg-blue-300'}`}
+					className={`p-2 rounded-sm ${!next ? "bg-gray-300" : "bg-blue-300"}`}
 					disabled={!next}
 					onClick={() => handlePage(next)}
 				>
@@ -97,4 +98,4 @@ const App = () => {
 	);
 };
 
-export default App;
+export default Home;
