@@ -1,64 +1,59 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { Pokemon } from 'pokenode-ts';
-import { fetchPokeStart } from './actions/pokeActions/pokeActions';
-import { RootState } from './reducers/rootReducer';
+import { NamedAPIResource } from 'pokenode-ts';
+//import { fetchPokeStart } from './actions/pokeActions/pokeActions';
 import PokeCard from './components/PokeCard';
+import { useGetPokemonsQuery } from './services/pokeapi';
 
 const App = () => {
-	const dispatch = useDispatch();
-	const { loading, error, pokemons, next, previous } = useSelector(
-		(state: RootState) => state.pokemons
-	);
+	const [queryParams, setQueryParams] = useState('offset=0&limit=20');
+	const { data, error, isLoading } = useGetPokemonsQuery(queryParams);
 
-	useEffect(() => {
-		dispatch(fetchPokeStart(0));
-	}, []);
+	useEffect(() => {}, []);
 
-	const handlePrevious = (previous: string | undefined) => {
+	const handlePrevious = (previous: string | undefined | null) => {
 		if (!previous) return;
-
-		// why?
-		// unfortunately when I started I was not aware I was not going to be able to simply
-		// pass the next/previous string to the api wrapper I am using here
-		// so I extract only the offset. Ideally it would not be needed
-		const queryParams = new URLSearchParams(previous.split('?')[1]);
-		dispatch(fetchPokeStart(Number(queryParams.get('offset'))));
+		setQueryParams(previous.split('?')[1]);
 	};
 
-	const handleNext = (next: string | undefined) => {
+	const handleNext = (next: string | undefined | null) => {
 		if (!next) return;
-
-		// why?
-		// unfortunately when I started I was not aware I was not going to be able to simply
-		// pass the next/previous string to the api wrapper I am using here
-		// so I extract only the offset. Ideally it would not be needed
-		const queryParams = new URLSearchParams(next.split('?')[1]);
-		dispatch(fetchPokeStart(Number(queryParams.get('offset'))));
+		setQueryParams(next.split('?')[1]);
 	};
-
-	console.log(loading);
 
 	if (error) {
 		return <div>An error occurred, please try again later</div>;
 	}
-	if (loading) {
+	if (isLoading) {
 		return <div>Loading pokemons...</div>;
 	}
 
 	return (
-		<div className="flex flex-col justify-center">
+		<div className="flex flex-col justify-center items-center">
 			<div className="container grid lg:grid-cols-4 md:grid-cols-3 xs:grid-cols2 grid-cols-1">
-				{pokemons?.map((poke: Pokemon) => (
-					<PokeCard key={poke.name} pokemon={poke} />
+				{data?.results?.map((pokemon: NamedAPIResource) => (
+					<PokeCard key={pokemon.name} pokemon={pokemon} />
 				))}
 			</div>
 			<div>
-				<button disabled={!previous} onClick={() => handlePrevious(previous)}>
+				<button
+					// class concatenation is easier to read using a tool like
+					// classnames. For sake of simplicity I'm using string interpolation
+					className={`p-2 rounded-sm ${
+						!data?.previous ? 'bg-gray-300' : 'bg-blue-300'
+					}`}
+					disabled={!data?.previous}
+					onClick={() => handlePrevious(data?.previous)}
+				>
 					Prev
 				</button>
-				<button disabled={!next} onClick={() => handleNext(next)}>
+				<button
+					className={`ml-2 p-2 rounded-sm ${
+						!data?.next ? 'bg-gray-300' : 'bg-blue-300'
+					}`}
+					disabled={!data?.next}
+					onClick={() => handleNext(data?.next)}
+				>
 					Next
 				</button>
 			</div>

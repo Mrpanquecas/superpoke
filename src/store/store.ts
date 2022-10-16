@@ -1,12 +1,15 @@
-import { createStore, applyMiddleware } from 'redux';
-import createSagaMiddleware from '@redux-saga/core';
-import rootReducer from '../reducers/rootReducer';
-import { rootSaga } from '../sagas/rootSaga';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
+import pokemonReducer from '../features/pokemons/pokemonSlice';
+import { pokeApi } from '../services/pokeapi';
 
-const sagaMiddleware = createSagaMiddleware();
+export const store = configureStore({
+	reducer: {
+		pokemons: pokemonReducer,
+		[pokeApi.reducerPath]: pokeApi.reducer,
+	},
+	middleware: (getDefaultMiddleware) =>
+		getDefaultMiddleware().concat(pokeApi.middleware),
+});
 
-const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
-
-sagaMiddleware.run(rootSaga);
-
-export default store;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
