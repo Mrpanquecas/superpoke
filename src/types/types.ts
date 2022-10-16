@@ -1,4 +1,3 @@
-import pokeTypes from '../ActionTypes/pokeTypes';
 import { Pokemon } from 'pokenode-ts';
 
 export interface fetchPokemonSucessPayload {
@@ -20,19 +19,3 @@ export interface PokeState {
 	previous: string | undefined;
 	next: string | undefined;
 }
-
-export interface FetchPokeStart {
-	type: typeof pokeTypes.FETCH_POKE_START;
-	offset: number;
-}
-
-export interface FetchPokeFail {
-	type: typeof pokeTypes.FETCH_POKE_FAIL;
-}
-
-export interface FetchPokeSuccess {
-	type: typeof pokeTypes.FETCH_POKE_SUCCESS;
-	payload: fetchPokemonSucessPayload;
-}
-
-export type PokeActions = FetchPokeStart | FetchPokeFail | FetchPokeSuccess;

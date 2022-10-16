@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import PokemonDetails from './pages/pokemonDetails';
 
 const root = ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
@@ -13,7 +15,12 @@ const root = ReactDOM.createRoot(
 root.render(
 	<React.StrictMode>
 		<Provider store={store}>
-			<App />
+			<BrowserRouter>
+				<Routes>
+					<Route path="/" element={<App />} />
+					<Route path="/pokemon/:name" element={<PokemonDetails />} />
+				</Routes>
+			</BrowserRouter>
 		</Provider>
 	</React.StrictMode>
 );
