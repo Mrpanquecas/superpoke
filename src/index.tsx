@@ -6,7 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import PokemonDetails from './pages/pokemonDetails';
+import PokemonDetails from './pages/PokemonDetails';
+import AddPokemon from './pages/AddPokemon';
 
 const root = ReactDOM.createRoot(
 	document.getElementById('root') as HTMLElement
@@ -18,6 +19,7 @@ root.render(
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<App />} />
+					<Route path="/addPokemon" element={<AddPokemon />} />
 					<Route path="/pokemon/:name" element={<PokemonDetails />} />
 				</Routes>
 			</BrowserRouter>
