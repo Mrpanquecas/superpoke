@@ -5,9 +5,9 @@ import { fetchPokemonList } from "../actions/pokeActions/pokeActions";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 import { useNavigate } from "react-router-dom";
 import { PokeBallLoading } from "../components/PokeBallLoading";
+import { CustomPokemon } from "../features/pokemons/pokemonSlice";
 
-const Home: React.FC<{}> = (props) => {
-	console.log(props);
+const Home: React.FC<{}> = () => {
 	const navigate = useNavigate();
 	const dispatch = useAppDispatch();
 	const { pokemons, loading, error, next, previous, count } = useAppSelector(
@@ -28,7 +28,7 @@ const Home: React.FC<{}> = (props) => {
 		dispatch(fetchPokemonList(Number(queryParams.get("offset"))));
 	};
 
-	const handleFirstLast = (count: number) => {
+	const handleFirstOrLast = (count: number) => {
 		dispatch(fetchPokemonList(count));
 	};
 
@@ -42,7 +42,7 @@ const Home: React.FC<{}> = (props) => {
 	// Pagination could go more in depth by using number to skip to each page direcly
 	// but in my opinion this already shows the basics of it's usage.
 	return (
-		<div className="flex flex-col justify-center items-center">
+		<div className="flex flex-col justify-center items-center mb-4">
 			<button
 				// Using navigate method to redirect the user
 				// same functionality could be achieved with the Link component
@@ -51,8 +51,8 @@ const Home: React.FC<{}> = (props) => {
 			>
 				ADD A NEW POKEMON
 			</button>
-			<div className="container grid lg:grid-cols-4 md:grid-cols-3 xs:grid-cols2 grid-cols-1">
-				{pokemons?.map((pokemon: Pokemon) => (
+			<div className="container grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+				{pokemons?.map((pokemon: Pokemon | CustomPokemon) => (
 					<PokeCard key={pokemon.name} pokemon={pokemon} />
 				))}
 			</div>
@@ -61,7 +61,7 @@ const Home: React.FC<{}> = (props) => {
 					aria-label="previous"
 					className="p-2 rounded-sm bg-blue-300"
 					disabled={!previous}
-					onClick={() => handleFirstLast(0)}
+					onClick={() => handleFirstOrLast(0)}
 				>
 					First
 				</button>
@@ -89,7 +89,7 @@ const Home: React.FC<{}> = (props) => {
 					aria-label="next"
 					className="p-2 rounded-sm bg-blue-300"
 					disabled={!next}
-					onClick={() => handleFirstLast(count - 20)}
+					onClick={() => handleFirstOrLast(count - 20)}
 				>
 					Last
 				</button>

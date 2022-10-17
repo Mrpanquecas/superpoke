@@ -8,6 +8,7 @@ import reportWebVitals from "./reportWebVitals";
 import { store } from "./store/store";
 import PokemonDetails from "./pages/PokemonDetails";
 import AddPokemon from "./pages/AddPokemon";
+import Layout from "./components/Layout";
 
 const root = ReactDOM.createRoot(
 	document.getElementById("root") as HTMLElement
@@ -17,11 +18,13 @@ root.render(
 	<React.StrictMode>
 		<Provider store={store}>
 			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/addPokemon" element={<AddPokemon />} />
-					<Route path="/pokemon/:name" element={<PokemonDetails />} />
-				</Routes>
+				<Layout>
+					<Routes>
+						<Route path="/" element={<Home />} />
+						<Route path="/addPokemon" element={<AddPokemon />} />
+						<Route path="/pokemon/:name" element={<PokemonDetails />} />
+					</Routes>
+				</Layout>
 			</BrowserRouter>
 		</Provider>
 	</React.StrictMode>

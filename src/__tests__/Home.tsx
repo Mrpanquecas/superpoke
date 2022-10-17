@@ -4,7 +4,6 @@ import { BrowserRouter, MemoryRouter, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store } from "../store/store";
 import Home from "../pages/Home";
-import userEvent from "@testing-library/user-event";
 import PokemonDetails from "../pages/PokemonDetails";
 
 const Wrapper = ({ children }: PropsWithChildren<{}>) => (
@@ -46,5 +45,7 @@ test("Displays bulbasaur details page", async () => {
 		expect(screen.getByTestId("pokemonDetails")).toBeInTheDocument();
 	}, waitForArgs);
 
-	expect(screen.getByText("#1 bulbasaur")).toBeInTheDocument();
+	await waitFor(() => {
+		expect(screen.getByText("#1 bulbasaur")).toBeInTheDocument();
+	}, waitForArgs);
 });

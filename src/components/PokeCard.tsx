@@ -1,16 +1,22 @@
-import { Pokemon } from "pokenode-ts";
 import { Link } from "react-router-dom";
+import { CustomPokemon } from "../features/pokemons/pokemonSlice";
 
 interface PokeCardProps {
-	pokemon: Pokemon;
+	pokemon: CustomPokemon;
 }
 
 const PokeCard: React.FC<PokeCardProps> = ({ pokemon }) => {
-	const pokemonTypes = pokemon.types.map((type) => type.type.name);
+	const pokemonTypes = pokemon.types?.map((type) => type.type.name);
 
 	return (
 		// Using react router to redirect the user
-		<Link data-testid={pokemon.name} to={`pokemon/${pokemon.name}`}>
+		// with a specific state in case we have a custom pokemon
+		// because we won't be able to fetch it's information remotely
+		<Link
+			data-testid={pokemon.name}
+			to={`pokemon/${pokemon.name}`}
+			state={pokemon?.custom ? pokemon : null}
+		>
 			<div className="h-32 bg-green-300 m-2 p-2 rounded-sm flex justify-between items-center hover:cursor-pointer hover:scale-105">
 				<div className="flex flex-col">
 					<span className="font-semibold text-md">

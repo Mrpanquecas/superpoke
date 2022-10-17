@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { fetchSpecificPokemon } from "../actions/pokeActions/pokeActions";
 import { PokeBallLoading } from "../components/PokeBallLoading";
+import { CustomPokemon } from "../features/pokemons/pokemonSlice";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
 
 interface PokemonDetailsProps {}
 
 const PokemonDetails: React.FC<PokemonDetailsProps> = () => {
+	const { state: customPokemon }: { state: CustomPokemon } = useLocation();
 	const { name } = useParams<"name">();
 	const dispatch = useAppDispatch();
 	const { pokemonDetails, loading, error } = useAppSelector(
@@ -14,17 +16,22 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = () => {
 	);
 
 	useEffect(() => {
-		if (name) {
+		if (name && !customPokemon) {
 			dispatch(fetchSpecificPokemon(name));
 		}
 	}, []);
 
-	const pokemonTypes = pokemonDetails?.types.map((type) => type.type.name);
+	// if we have a custom pokemon
+	// set the component local state
+	// to display the custom pokemon infomation instead
+	let pokemon = customPokemon || pokemonDetails;
+	const pokemonTypes = pokemon?.types.map((type) => type.type.name);
 
 	if (error) {
 		return <div>An error occurred, please try again later</div>;
 	}
-	if (loading) {
+
+	if (loading || !pokemon) {
 		return <PokeBallLoading />;
 	}
 
@@ -35,7 +42,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = () => {
 		>
 			<div className="w-full h-full bg-green-300 m-2 p-2 rounded-sm flex flex-col justify-start">
 				<h1 className="font-semibold text-xl">
-					{`#${pokemonDetails?.id}`} {pokemonDetails?.name}
+					{`#${pokemon?.id}`} {pokemon?.name}
 				</h1>
 				<div className="grid grid-cols-3 space-x-2">
 					<div className="bg-white p-2 rounded-sm">
@@ -44,7 +51,7 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = () => {
 					</div>
 					<div className="bg-white p-2 rounded-sm">
 						<p className="bg-gray-300 rounded-sm px-2 py-1">Abilities:</p>
-						{pokemonDetails?.abilities.map((ability) => (
+						{pokemon?.abilities.map((ability) => (
 							// It is possible to further next request to get
 							// relevant flavor text or more information for these abilities
 							<p key={ability.ability.name}>
@@ -57,25 +64,25 @@ const PokemonDetails: React.FC<PokemonDetailsProps> = () => {
 							List of possible Moves:
 						</p>
 						<ul className="h-40 overflow-y-scroll">
-							{pokemonDetails?.moves.map((move) => (
+							{pokemon?.moves.map((move) => (
 								<p key={move.move.name}>{move.move.name}</p>
 							))}
 						</ul>
 					</div>
 				</div>
-				{pokemonDetails?.sprites.front_default ? (
-					<div className="h-40 w-full flex justify-center">
+				{pokemon?.sprites?.front_default ? (
+					<div className="h-full w-full flex justify-center">
 						<img
-							src={pokemonDetails.sprites.front_default}
-							alt={`${pokemonDetails.name}-sprite`}
+							src={pokemon.sprites.front_default}
+							alt={`${pokemon.name}-sprite`}
 						/>
 					</div>
 				) : (
-					<div className="h-40 w-full flex justify-center">
+					<div className="h-full w-full flex justify-center">
 						<img
 							className="w-20 h-20"
 							src={"/assets/pokeball.png"}
-							alt={`${pokemonDetails?.name}-sprite`}
+							alt={`${pokemon?.name}-sprite`}
 						/>
 					</div>
 				)}
